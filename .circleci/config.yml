@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:18.06.1-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 18.06.0-ce
+      - run:
+          name: Build Image
+          command: >
+            docker image build -t thomasjpfan/etcd-b2-snapshot:master
+            --label "org.opencontainers.image.revision=$(CIRCLE_SHA1)" .
+      - deploy:
+          name: Push to Docker Hub
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ] && [ -z "$CIRCLE_PULL_REQUEST" ]; then
+            sh scripts/docker_push.sh
+            fi
