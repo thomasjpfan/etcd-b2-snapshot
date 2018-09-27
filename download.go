@@ -40,7 +40,7 @@ func (b B2Downloader) Download(path string) error {
 		return err
 	}
 
-	log.Printf("First download attempt failed trying again in %d ms", b.DownloadRetryInterval)
+	log.Printf("First download attempt failed trying again in %d ms: %v", b.DownloadRetryInterval, err)
 	ticker := time.NewTicker(time.Millisecond * time.Duration(b.DownloadRetryInterval))
 
 	for range ticker.C {
