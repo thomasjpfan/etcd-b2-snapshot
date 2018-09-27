@@ -40,7 +40,7 @@ func (s *DownloadTestSuite) SetupSuite() {
 
 	bucketName := os.Getenv("EBS_B2_BUCKET_NAME")
 	if len(bucketName) == 0 {
-		s.T().Skipf("EBS_B2_BUCKET_ID does not exists")
+		s.T().Skipf("EBS_B2_BUCKET_NAME does not exists")
 	}
 
 	b2Object := os.Getenv("EBS_B2_OBJECT")
