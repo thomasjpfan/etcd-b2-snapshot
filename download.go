@@ -51,7 +51,7 @@ func (b B2Downloader) Download(path string) error {
 		if err != nil && err.Error() == "File does not exist on B2" {
 			return err
 		}
-		log.Printf("Download attempt failed trying again in %d ms", b.DownloadRetryInterval)
+		log.Printf("Download attempt failed trying again in %d ms: %v", b.DownloadRetryInterval, err)
 	}
 	return nil
 }
