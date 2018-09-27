@@ -6,6 +6,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -mod vendor -o download-etcd-snapshot-b2 -
 
 FROM gcr.io/etcd-development/etcd:v3.3.9
 
+RUN apk --update --no-cache --no-progress add ca-certificates
+
 ENV ETCDCTL_API=3 \
     EBS_B2_DOWNLOAD_RETRY_INTERVAL=5000
 
