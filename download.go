@@ -86,9 +86,11 @@ func (b B2Downloader) download(path string) error {
 	}
 
 	if len(b.ObjectID) != 0 {
+		log.Printf("Using object id to download snapshot.db")
 		return b.downloadFileWithID(authroizeAccountResp, path)
 	}
 
+	log.Printf("Using object name to download snapshot.db")
 	return b.downloadFileWithName(authroizeAccountResp, path)
 }
 

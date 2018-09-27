@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -12,22 +14,35 @@ func main() {
 	}
 	filePath := os.Args[1]
 
-	// spec, err := ParseENV()
-	// if err != nil {
-	// 	log.Fatalf("%v", err)
-	// }
+	spec, err := ParseENV()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 
-	// dc, err := NewDownloadClientFromSpec(*spec)
-	// if err != nil {
-	// 	log.Fatalf("%v", err)
-	// }
+	client := http.Client{
+		Timeout: time.Second * 10,
+	}
 
-	// err = dc.Get(spec.EtcdSnapshotBucket, spec.EtcdObjectName, filePath)
+	dl := B2Downloader{
+		ApplicationID:         spec.B2ApplicationID,
+		ApplicationKey:        spec.B2ApplicationKey,
+		BucketName:            spec.B2BucketName,
+		Object:                spec.B2Object,
+		ObjectID:              spec.B2ObjectID,
+		DownloadRetryInterval: spec.B2DownloadRetryInterval,
+		HTTPClient:            &client,
+	}
 
-	// if err != nil {
-	// 	log.Printf("Unable to download snapshot: %v", err)
-	// 	return
-	// }
+	err = dl.Download(filePath)
+
+	if err != nil && err.Error() == "File does not exist on B2" {
+		log.Printf("File does not exist on B2")
+		return
+	}
+
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 
 	log.Printf("%s downloaded", filePath)
 
